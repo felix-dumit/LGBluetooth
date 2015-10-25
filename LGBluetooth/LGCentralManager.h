@@ -113,9 +113,10 @@ typedef void (^LGCentralManagerDiscoverPeripheralsCallback) (NSArray *peripheral
  * <i>aScanInterval</i> with nearby peripherals
  */
 - (void)scanForPeripheralsByInterval:(NSUInteger)aScanInterval
-                            services:(NSArray *)serviceUUIDs
-                             options:(NSDictionary *)options
-                          completion:(LGCentralManagerDiscoverPeripheralsCallback)aCallback;
+                            services:(NSArray*)serviceUUIDs
+                             options:(NSDictionary*)options
+                               found:(LGCentralManagerDiscoverPeripheralsCallback)aCallback
+                          completion:(LGCentralManagerDiscoverPeripheralsCallback)aCompletionCallback;
 
 /**
  * Stops ongoing scan proccess

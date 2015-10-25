@@ -47,6 +47,13 @@
  */
 @property (strong, nonatomic) NSMutableArray *scannedPeripherals;
 
+@property (strong, nonatomic) NSArray *serviceArray;
+
+@property (strong, nonatomic) NSDictionary *scanOptions;
+
+
+@property (assign, nonatomic) NSTimeInterval scanInterval;
+
 /**
  * Completion block for peripheral scanning
  */
@@ -56,6 +63,7 @@
  * CBCentralManager's state updated by centralManagerDidUpdateState:
  */
 @property(nonatomic) CBCentralManagerState cbCentralManagerState;
+@property (copy, nonatomic) LGCentralManagerDiscoverPeripheralsCallback completeBlock;
 
 @end
 
@@ -117,10 +125,11 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self
                                              selector:@selector(stopScanForPeripherals)
                                                object:nil];
-    if (self.scanBlock) {
-        self.scanBlock(self.peripherals);
+    if (self.completeBlock) {
+        self.completeBlock(self.peripherals);
     }
     self.scanBlock = nil;
+    self.completeBlock = nil;
 }
 
 - (void)scanForPeripheralsWithServices:(NSArray *)serviceUUIDs
@@ -128,7 +137,9 @@
 {
     [self.scannedPeripherals removeAllObjects];
     self.scanning = YES;
-	[self.manager scanForPeripheralsWithServices:serviceUUIDs
+    self.serviceArray = serviceUUIDs;
+    self.scanOptions = options;
+    [self.manager scanForPeripheralsWithServices:serviceUUIDs
                                          options:options];
 }
 
@@ -137,24 +148,29 @@
 {
     [self scanForPeripheralsByInterval:aScanInterval
                               services:nil
-                               options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}
+                               options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES }
+                                 found:nil
                             completion:aCallback];
 }
 
 - (void)scanForPeripheralsByInterval:(NSUInteger)aScanInterval
                             services:(NSArray *)serviceUUIDs
                              options:(NSDictionary *)options
-                          completion:(LGCentralManagerDiscoverPeripheralsCallback)aCallback
-{
+                               found:(LGCentralManagerDiscoverPeripheralsCallback)aCallback
+                          completion:(LGCentralManagerDiscoverPeripheralsCallback)aCompletionCallback {
+    self.completeBlock = aCompletionCallback;
     self.scanBlock = aCallback;
+    self.scanInterval = aScanInterval;
     [self scanForPeripheralsWithServices:serviceUUIDs
                                  options:options];
     [NSObject cancelPreviousPerformRequestsWithTarget:self
                                              selector:@selector(stopScanForPeripherals)
                                                object:nil];
-    [self performSelector:@selector(stopScanForPeripherals)
-               withObject:nil
-               afterDelay:aScanInterval];
+    if ([self isCentralReady]) {
+        [self performSelector:@selector(stopScanForPeripherals)
+                   withObject:nil
+                   afterDelay:aScanInterval];
+    }
 }
 
 - (NSArray *)retrievePeripheralsWithIdentifiers:(NSArray *)identifiers
@@ -252,13 +268,12 @@
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
-    self.cbCentralManagerState = central.state;
-    NSString *message = [self stateMessage];
-    if (message) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            LGLogError(@"%@", message);
-        });
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if ([self isCentralReady] && self.scanning) {
+            [self scanForPeripheralsByInterval:self.scanInterval services:self.serviceArray options:self.scanOptions found:self.scanBlock completion:self.completeBlock];
+        }
+    });
 }
 
 - (void)centralManager:(CBCentralManager *)central
@@ -274,6 +289,11 @@
             // Calculating AVG RSSI
             lgPeripheral.RSSI = (lgPeripheral.RSSI + [RSSI integerValue]) / 2;
         }
+        if (!lgPeripheral.easedDistance) {
+            lgPeripheral.easedDistance = [[GoodDistance alloc] init];
+        }
+        [lgPeripheral.easedDistance addRSSI:[RSSI floatValue]];
+        
         lgPeripheral.advertisingData = advertisementData;
         
         if ([self.scannedPeripherals count] >= self.peripheralsCountToStop) {
@@ -281,6 +301,10 @@
                                                      selector:@selector(stopScanForPeripherals)
                                                        object:nil];
             [self stopScanForPeripherals];
+        }
+        
+        if (self.scanBlock) {
+            self.scanBlock(@[lgPeripheral]);
         }
     });
 }

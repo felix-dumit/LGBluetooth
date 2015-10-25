@@ -20,6 +20,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "GoodDistance.h"
+
 @class CBPeripheral;
 @class LGCentralManager;
 
@@ -125,6 +127,8 @@ typedef void(^LGPeripheralRSSIValueCallback)(NSNumber *RSSI, NSError *error);
  * Signal strength of peripheral
  */
 @property (assign, nonatomic) NSInteger RSSI;
+
+@property (strong, nonatomic) GoodDistance *easedDistance;
 
 /**
  * The advertisement data that was tracked from peripheral
