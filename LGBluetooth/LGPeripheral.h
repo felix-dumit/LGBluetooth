@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Created by : l0gg3r
-// Copyright (c) 2014 l0gg3r. All rights reserved.
+// Copyright (c) 2014 SocialObjects Software. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -23,7 +23,6 @@
 #import "GoodDistance.h"
 
 @class CBPeripheral;
-@class LGCentralManager;
 
 #pragma mark - Notification identifiers -
 
@@ -31,7 +30,7 @@
  * NSNotification which will be triggered by this identifier when
  * Peripheral will be connected
  */
-extern NSString * const kLGPeripheralDidConnect;
+extern NSString *const kLGPeripheralDidConnect;
 
 /**
  * NSNotification which will be triggered by this identifier when
@@ -41,14 +40,14 @@ extern NSString * const kLGPeripheralDidConnect;
  * e.g. after calling disconnectWithCompletion: and giving complition
  * will NOT post `kLGPeripheralDidDisconnect` notification
  */
-extern NSString * const kLGPeripheralDidDisconnect;
+extern NSString *const kLGPeripheralDidDisconnect;
 
 #pragma mark - Error Domains -
 
 /**
  * Error domains for Connection errors
  */
-extern NSString * const kLGPeripheralConnectionErrorDomain;
+extern NSString *const kLGPeripheralConnectionErrorDomain;
 
 #pragma mark - Error Codes -
 /**
@@ -66,19 +65,18 @@ extern const NSInteger kConnectionMissingErrorCode;
 /**
  * Error message for connection timeouts
  */
-extern NSString * const kConnectionTimeoutErrorMessage;
+extern NSString *const kConnectionTimeoutErrorMessage;
 
 /**
  * Error message for missing connections
  */
-extern NSString * const kConnectionMissingErrorMessage;
-
+extern NSString *const kConnectionMissingErrorMessage;
 
 #pragma mark - Callback types -
 
-typedef void(^LGPeripheralConnectionCallback)(NSError *error);
-typedef void(^LGPeripheralDiscoverServicesCallback)(NSArray *services, NSError *error);
-typedef void(^LGPeripheralRSSIValueCallback)(NSNumber *RSSI, NSError *error);
+typedef void (^LGPeripheralConnectionCallback)(NSError *error);
+typedef void (^LGPeripheralDiscoverServicesCallback)(NSArray *services, NSError *error);
+typedef void (^LGPeripheralRSSIValueCallback)(NSNumber *RSSI, NSError *error);
 
 #pragma mark - Public Interface -
 
@@ -90,11 +88,6 @@ typedef void(^LGPeripheralRSSIValueCallback)(NSNumber *RSSI, NSError *error);
  * Core Bluetooth's CBPeripheral instance
  */
 @property (strong, nonatomic, readonly) CBPeripheral *cbPeripheral;
-
-/**
- * LGCentralManager's instance used to connect to peripherals
- */
-@property (weak, nonatomic, readonly) LGCentralManager *manager;
 
 /**
  * Flag to indicate discovering services or not
@@ -172,7 +165,6 @@ typedef void(^LGPeripheralRSSIValueCallback)(NSNumber *RSSI, NSError *error);
 - (void)discoverServices:(NSArray *)serviceUUIDs
               completion:(LGPeripheralDiscoverServicesCallback)aCallback;
 
-
 /**
  * Reads current RSSI of this peripheral, (note : requires active connection to peripheral)
  * @param aCallback Will be called after successfull/failure ble-operation
@@ -191,6 +183,6 @@ typedef void(^LGPeripheralRSSIValueCallback)(NSNumber *RSSI, NSError *error);
 /**
  * @return Wrapper object over Core Bluetooth's CBPeripheral
  */
-- (instancetype)initWithPeripheral:(CBPeripheral *)aPeripheral manager:(LGCentralManager *)manager;
+- (instancetype)initWithPeripheral:(CBPeripheral *)aPeripheral;
 
 @end
