@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Created by : l0gg3r
-// Copyright (c) 2014 SocialObjects Software. All rights reserved.
+// Copyright (c) 2014 l0gg3r. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -19,8 +19,6 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-#define LG_BLE_SILENCE
 
 #ifndef LG_BLE_SILENCE
 #ifdef DEBUG
@@ -45,19 +43,19 @@
 
 #import "LGCharacteristic.h"
 
-typedef void (^LGUtilsDiscoverCharacterisitcCallback)(LGCharacteristic *characteristic, NSError *error);
+typedef void(^LGUtilsDiscoverCharacterisitcCallback)(LGCharacteristic *characteristic, NSError *error);
 
 #pragma mark - Error Domains -
 
 /**
  * Error domain for Write errors
  */
-extern NSString *const kLGUtilsWriteErrorDomain;
+extern NSString * const kLGUtilsWriteErrorDomain;
 
 /**
  * Global error Message key
  */
-extern NSString *const kLGErrorMessageKey;
+extern NSString * const kLGErrorMessageKey;
 
 #pragma mark - Error Codes -
 
@@ -79,13 +77,13 @@ extern const NSInteger kLGUtilsMissingCharacteristicErrorCode;
  * Error message for write operation
  * Service was not found on peripheral
  */
-extern NSString *const kLGUtilsMissingServiceErrorMessage;
+extern NSString * const kLGUtilsMissingServiceErrorMessage;
 
 /**
  * Error message for write operation
  * Characteristic was not found on peripheral
  */
-extern NSString *const kLGUtilsMissingCharacteristicErrorMessage;
+extern NSString * const kLGUtilsMissingCharacteristicErrorMessage;
 
 @class LGPeripheral;
 
@@ -104,7 +102,7 @@ extern NSString *const kLGUtilsMissingCharacteristicErrorMessage;
  */
 + (void)writeData:(NSData *)aData
       charactUUID:(NSString *)aCharacteristic
-      serviceUUID:(NSString *)aService
+       serviceUUID:(NSString *)aService
        peripheral:(LGPeripheral *)aPeripheral
        completion:(LGCharacteristicWriteCallback)aCallback;
 

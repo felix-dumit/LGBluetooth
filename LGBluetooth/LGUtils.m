@@ -1,7 +1,7 @@
 // The MIT License (MIT)
 //
 // Created by : l0gg3r
-// Copyright (c) 2014 SocialObjects Software. All rights reserved.
+// Copyright (c) 2014 l0gg3r. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -21,6 +21,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "LGUtils.h"
+
 #if TARGET_OS_IPHONE
 #import <CoreBluetooth/CoreBluetooth.h>
 #elif TARGET_OS_MAC
@@ -31,22 +32,23 @@
 /**
  * Error domain for Write errors
  */
-NSString* const kLGUtilsWriteErrorDomain = @"LGUtilsWriteErrorDomain";
+NSString * const kLGUtilsWriteErrorDomain = @"LGUtilsWriteErrorDomain";
 
 /**
  * Error domain for Read errors
  */
-NSString* const kLGUtilsReadErrorDomain = @"LGUtilsReadErrorDomain";
+NSString * const kLGUtilsReadErrorDomain = @"LGUtilsReadErrorDomain";
 
 /**
  * Error domain for Discover errors
  */
-NSString* const kLGUtilsDiscoverErrorDomain = @"LGUtilsDiscoverErrorDomain";
+NSString * const kLGUtilsDiscoverErrorDomain = @"LGUtilsDiscoverErrorDomain";
+
 
 /**
  * Global key for providing errors of LGBluetooth
  */
-NSString* const kLGErrorMessageKey = @"msg";
+NSString * const kLGErrorMessageKey = @"msg";
 
 /**
  * Error code for write operation
@@ -64,14 +66,13 @@ const NSInteger kLGUtilsMissingCharacteristicErrorCode = 411;
  * Error message for write operation
  * Service was not found on peripheral
  */
-NSString* const kLGUtilsMissingServiceErrorMessage = @"Provided service UUID doesn't exist in provided pheripheral";
+NSString * const kLGUtilsMissingServiceErrorMessage = @"Provided service UUID doesn't exist in provided pheripheral";
 
 /**
  * Error message for write operation
  * Characteristic was not found on peripheral
  */
-NSString* const kLGUtilsMissingCharacteristicErrorMessage = @"Provided characteristic doesn't exist in provided service";
-;
+NSString * const kLGUtilsMissingCharacteristicErrorMessage = @"Provided characteristic doesn't exist in provided service";;
 
 /**
  * Timeout of connection to peripheral
@@ -84,10 +85,10 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
 #pragma mark - Public Methods -
 /*----------------------------------------------------*/
 
-+ (void)writeData:(NSData*)aData
-      charactUUID:(NSString*)aCharacteristic
-      serviceUUID:(NSString*)aService
-       peripheral:(LGPeripheral*)aPeripheral
++ (void)writeData:(NSData *)aData
+      charactUUID:(NSString *)aCharacteristic
+      serviceUUID:(NSString *)aService
+       peripheral:(LGPeripheral *)aPeripheral
        completion:(LGCharacteristicWriteCallback)aCallback
 {
     if (aPeripheral.cbPeripheral.state == CBPeripheralStateConnected) {
@@ -97,7 +98,7 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
         readyPeripheral:aPeripheral
              completion:aCallback];
     } else {
-        [aPeripheral connectWithTimeout:kLGUtilsPeripheralConnectionTimeoutInterval completion:^(NSError* error) {
+        [aPeripheral connectWithTimeout:kLGUtilsPeripheralConnectionTimeoutInterval completion:^(NSError *error) {
             [self writeData:aData
                 charactUUID:aCharacteristic
                 serviceUUID:aService
@@ -107,9 +108,9 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
     }
 }
 
-+ (void)readDataFromCharactUUID:(NSString*)aCharacteristic
-                    serviceUUID:(NSString*)aService
-                     peripheral:(LGPeripheral*)aPeripheral
++ (void)readDataFromCharactUUID:(NSString *)aCharacteristic
+                    serviceUUID:(NSString *)aService
+                     peripheral:(LGPeripheral *)aPeripheral
                      completion:(LGCharacteristicReadCallback)aCallback
 {
     if (aPeripheral.cbPeripheral.state == CBPeripheralStateConnected) {
@@ -118,7 +119,7 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
                       readyPeripheral:aPeripheral
                            completion:aCallback];
     } else {
-        [aPeripheral connectWithTimeout:kLGUtilsPeripheralConnectionTimeoutInterval completion:^(NSError* error) {
+        [aPeripheral connectWithTimeout:kLGUtilsPeripheralConnectionTimeoutInterval completion:^(NSError *error) {
             [self readDataFromCharactUUID:aCharacteristic
                               serviceUUID:aService
                           readyPeripheral:aPeripheral
@@ -127,9 +128,9 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
     }
 }
 
-+ (void)discoverCharactUUID:(NSString*)aCharacteristic
-                serviceUUID:(NSString*)aService
-                 peripheral:(LGPeripheral*)aPeripheral
++ (void)discoverCharactUUID:(NSString *)aCharacteristic
+                serviceUUID:(NSString *)aService
+                 peripheral:(LGPeripheral *)aPeripheral
                  completion:(LGUtilsDiscoverCharacterisitcCallback)aCallback
 {
     if (aPeripheral.cbPeripheral.state == CBPeripheralStateConnected) {
@@ -138,7 +139,7 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
                   readyPeripheral:aPeripheral
                        completion:aCallback];
     } else {
-        [aPeripheral connectWithTimeout:kLGUtilsPeripheralConnectionTimeoutInterval completion:^(NSError* error) {
+        [aPeripheral connectWithTimeout:kLGUtilsPeripheralConnectionTimeoutInterval completion:^(NSError *error) {
             [self discoverCharactUUID:aCharacteristic
                           serviceUUID:aService
                       readyPeripheral:aPeripheral
@@ -151,13 +152,13 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
 #pragma mark - Private Methods -
 /*----------------------------------------------------*/
 
-+ (void)writeData:(NSData*)aData
-      charactUUID:(NSString*)aCharacteristic
-      serviceUUID:(NSString*)aService
-  readyPeripheral:(LGPeripheral*)aPeripheral
++ (void)writeData:(NSData *)aData
+      charactUUID:(NSString *)aCharacteristic
+      serviceUUID:(NSString *)aService
+  readyPeripheral:(LGPeripheral *)aPeripheral
        completion:(LGCharacteristicWriteCallback)aCallback;
 {
-    [aPeripheral discoverServices:@[ [CBUUID UUIDWithString:aService] ] completion:^(NSArray* services, NSError* error) {
+    [aPeripheral discoverServices:@[[CBUUID UUIDWithString:aService]] completion:^(NSArray *services, NSError *error) {
         LGService *service = nil;
         if (services.count && !error && (service = [self findServiceInList:services byUUID:aService])) {
             [service discoverCharacteristicsWithUUIDs:@[[CBUUID UUIDWithString:aCharacteristic]]
@@ -192,12 +193,12 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
     }];
 }
 
-+ (void)readDataFromCharactUUID:(NSString*)aCharacteristic
-                    serviceUUID:(NSString*)aService
-                readyPeripheral:(LGPeripheral*)aPeripheral
++ (void)readDataFromCharactUUID:(NSString *)aCharacteristic
+                    serviceUUID:(NSString *)aService
+                readyPeripheral:(LGPeripheral *)aPeripheral
                      completion:(LGCharacteristicReadCallback)aCallback;
 {
-    [aPeripheral discoverServices:@[ [CBUUID UUIDWithString:aService] ] completion:^(NSArray* services, NSError* error) {
+    [aPeripheral discoverServices:@[[CBUUID UUIDWithString:aService]] completion:^(NSArray *services, NSError *error) {
         if (services.count && !error) {
             LGService *service = [self findServiceInList:services
                                                   byUUID:aService];
@@ -231,12 +232,12 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
     }];
 }
 
-+ (void)discoverCharactUUID:(NSString*)aCharacteristic
-                serviceUUID:(NSString*)aService
-            readyPeripheral:(LGPeripheral*)aPeripheral
++ (void)discoverCharactUUID:(NSString *)aCharacteristic
+                serviceUUID:(NSString *)aService
+            readyPeripheral:(LGPeripheral *)aPeripheral
                  completion:(LGUtilsDiscoverCharacterisitcCallback)aCallback
 {
-    [aPeripheral discoverServices:@[ [CBUUID UUIDWithString:aService] ] completion:^(NSArray* services, NSError* error) {
+    [aPeripheral discoverServices:@[[CBUUID UUIDWithString:aService]] completion:^(NSArray *services, NSError *error) {
         if (services.count && !error) {
             LGService *service = [self findServiceInList:services
                                                   byUUID:aService];
@@ -276,10 +277,10 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
  * Find characteristic in characteristic list by providied UUID string
  * @return Found characteristic, nil if no one found
  */
-+ (LGCharacteristic*)findCharacteristicInList:(NSArray*)characteristics
-                                       byUUID:(NSString*)anID
++ (LGCharacteristic *)findCharacteristicInList:(NSArray *)characteristics
+                                        byUUID:(NSString *)anID
 {
-    for (LGCharacteristic* characteristic in characteristics) {
+    for (LGCharacteristic *characteristic in characteristics) {
         if ([[characteristic.UUIDString lowercaseString] isEqualToString:[anID lowercaseString]]) {
             return characteristic;
         }
@@ -291,10 +292,10 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
  * Find service in services list by providied UUID string
  * @return Found service, nil if no one found
  */
-+ (LGService*)findServiceInList:(NSArray*)services
-                         byUUID:(NSString*)anID
++ (LGService *)findServiceInList:(NSArray *)services
+                          byUUID:(NSString *)anID
 {
-    for (LGService* service in services) {
+    for (LGService *service in services) {
         if ([[service.UUIDString lowercaseString] isEqualToString:[anID lowercaseString]]) {
             return service;
         }
@@ -306,25 +307,25 @@ const NSInteger kLGUtilsPeripheralConnectionTimeoutInterval = 30;
 #pragma mark - Error Generators -
 /*----------------------------------------------------*/
 
-+ (NSError*)writeErrorWithCode:(NSInteger)aCode message:(NSString*)aMsg
++ (NSError *)writeErrorWithCode:(NSInteger)aCode message:(NSString *)aMsg
 {
     return [NSError errorWithDomain:kLGUtilsWriteErrorDomain
                                code:aCode
-                           userInfo:@{ kLGErrorMessageKey : aMsg }];
+                           userInfo:@{kLGErrorMessageKey : aMsg}];
 }
 
-+ (NSError*)readErrorWithCode:(NSInteger)aCode message:(NSString*)aMsg
++ (NSError *)readErrorWithCode:(NSInteger)aCode message:(NSString *)aMsg
 {
     return [NSError errorWithDomain:kLGUtilsReadErrorDomain
                                code:aCode
-                           userInfo:@{ kLGErrorMessageKey : aMsg }];
+                           userInfo:@{kLGErrorMessageKey : aMsg}];
 }
 
-+ (NSError*)discoverErrorWithCode:(NSInteger)aCode message:(NSString*)aMsg
++ (NSError *)discoverErrorWithCode:(NSInteger)aCode message:(NSString *)aMsg
 {
     return [NSError errorWithDomain:kLGUtilsDiscoverErrorDomain
                                code:aCode
-                           userInfo:@{ kLGErrorMessageKey : aMsg }];
+                           userInfo:@{kLGErrorMessageKey : aMsg}];
 }
 
 @end
