@@ -57,7 +57,7 @@
         return sum / num;
     }
 
-    return INFINITY;
+    return 1e6f;
 }
 
 - (void)addRSSI:(CGFloat)rssi {
