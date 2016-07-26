@@ -24,15 +24,15 @@
     return self;
 }
 
-- (void)addAccuracy:(CGFloat)number {
-    [self.array addObject:[NSNumber numberWithFloat:number]];
+- (void)addAccuracy:(double)number {
+    [self.array addObject:@(number)];
 }
 
 - (void)reset {
     [self.array removeAllObjects];
 }
 
-- (CGFloat)average {
+- (double)average {
     NSUInteger count = [self.array count];
 
     if (count) {
@@ -46,7 +46,7 @@
             rangeArray = [rangeArray subarrayWithRange:NSMakeRange(first, size)];
         }
 
-        CGFloat sum = 0;
+        double sum = 0;
         NSUInteger num = 0;
 
         for (NSUInteger i = 0; i < [rangeArray count]; i++) {
@@ -60,8 +60,8 @@
     return 1e6f;
 }
 
-- (void)addRSSI:(CGFloat)rssi {
-    CGFloat accuracy = [GoodDistance calculateAccuracyForRSSI:rssi];
+- (void)addRSSI:(double)rssi {
+    double accuracy = [GoodDistance calculateAccuracyForRSSI:rssi];
 
     if ((accuracy >= 0.0) && (accuracy <= 80.0)) {
         [self addAccuracy:[GoodDistance calculateAccuracyForRSSI:rssi]];
@@ -70,7 +70,7 @@
     }
 }
 
-+ (CGFloat)calculateAccuracyForRSSI:(CGFloat)rssi {
++ (double)calculateAccuracyForRSSI:(double)rssi {
     const static NSInteger tx_power = -59;
 
     if (rssi == 0) {
@@ -82,7 +82,7 @@
     if (ratio < 1.0) {
         return pow(ratio, 10);
     } else {
-        CGFloat accuracy = (0.89976) * pow(ratio, 7.7095) + 0.111;
+        double accuracy = (0.89976) * pow(ratio, 7.7095) + 0.111;
         return accuracy;
     }
 }
