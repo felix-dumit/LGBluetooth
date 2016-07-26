@@ -10,10 +10,10 @@
 
 @interface GoodDistance : NSObject
 
-- (CGFloat)average;
-- (void)addRSSI:(CGFloat)rssi;
-- (void)addAccuracy:(CGFloat)number;
+- (double)average;
+- (void)addRSSI:(double)rssi;
+- (void)addAccuracy:(double)number;
 - (void)reset;
-+ (CGFloat)calculateAccuracyForRSSI:(CGFloat)rssi;
++ (double)calculateAccuracyForRSSI:(double)rssi;
 
 @end
